@@ -11,3 +11,5 @@
 /api_token
 /.idea
 /Makefile
+/.pre-commit-config.yaml
+/sandbox.py
