@@ -5,7 +5,7 @@ Installation:
 
 `
 
-    pip install ConnectedPapersExtractor==0.1.0
+    pip install ConnectedPapersExtractor
 `
 
 Code example:
