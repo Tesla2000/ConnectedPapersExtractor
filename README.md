@@ -4,6 +4,7 @@ A package for creating summaries based on https://www.connectedpapers.com/.
 Installation:
 
 `
+
     pip install ConnectedPapersExtractor==0.1.0
 `
 
