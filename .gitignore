@@ -1,0 +1,11 @@
+/docs/_build/
+/dist/
+/test_upload.sh
+/upload.sh
+/setup.sh
+/venv
+/build_docs.sh
+/requirements.txt
+/executor.py
+/pdfs/
+/api_token
