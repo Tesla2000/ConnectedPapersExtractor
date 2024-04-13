@@ -4,9 +4,9 @@ from typing import Generator
 from enhanced_webdriver import EnhancedWebdriver
 
 
-def _get_urls(connectedpapers_link: str) -> Generator[str, None, None]:
+def _get_urls(connected_papers_link: str) -> Generator[str, None, None]:
     driver = EnhancedWebdriver.create()
-    driver.get(connectedpapers_link)
+    driver.get(connected_papers_link)
     for _ in takewhile(
         lambda index: driver.click(
             f'//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[{index}]'

@@ -19,6 +19,10 @@ if __name__ == "__main__":
     )
     chain = load_summarize_chain(llm, chain_type="map_reduce")
     article_filter = Filter()
-    get_summaries(
-        connected_papers_url, chain, article_filter=article_filter, pdf_output=Path("")
+    summaries = get_summaries(
+        connected_papers_url=connected_papers_url,
+        chain=chain,
+        article_filter=article_filter,
+        pdf_output=Path("pdf_files"),
     )
+    print("\n".join(summary.text for summary in summaries))

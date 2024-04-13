@@ -10,12 +10,12 @@ from .PdfSummary import PdfSummary
 
 
 def _get_pdf_summaries(
-    connectedpapers_link: str,
+    connected_papers_link: str,
     article_filter: ArticleFilter,
-    dirpath: Union[str, Path] = Path("./"),
+    dir_path: Union[str, Path] = Path("./"),
 ) -> list[PdfSummary]:
     driver = EnhancedWebdriver.create()
-    driver.get(connectedpapers_link)
+    driver.get(connected_papers_link)
     summaries = list()
     for index in count(1):
         if not driver.click(
@@ -36,7 +36,7 @@ def _get_pdf_summaries(
             continue
         summaries.append(
             PdfSummary(
-                download_function=lambda: paper.download_pdf(dirpath=str(dirpath)),
+                download_function=lambda: paper.download_pdf(dirpath=str(dir_path)),
                 year=int(
                     driver.get_text_of_element(
                         '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'

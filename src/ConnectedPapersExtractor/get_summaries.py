@@ -15,7 +15,7 @@ class _NoFilter(ArticleFilter):
 
 
 def get_summaries(
-    connectedpapers_url: str,
+    connected_papers_url: str,
     chain: Chain,
     pdf_output: Union[Path, str] = None,
     article_filter: ArticleFilter = _NoFilter(),
@@ -23,7 +23,7 @@ def get_summaries(
     temp_pdf = pdf_output or Path(__file__).parent.joinpath("_temp_pfd_files")
     temp_pdf.mkdir(exist_ok=True, parents=True)
     summaries = _get_pdf_summaries(
-        connectedpapers_url,
+        connected_papers_url,
         article_filter,
         temp_pdf,
     )
