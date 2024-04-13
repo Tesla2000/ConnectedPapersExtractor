@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from pathlib import Path
+from typing import Callable
 
 from langchain.chains.base import Chain
 from langchain_community.document_loaders.pdf import PyPDFLoader
@@ -7,13 +7,13 @@ from langchain_community.document_loaders.pdf import PyPDFLoader
 
 @dataclass
 class PdfSummary:
-    path: Path
     year: int
     citations: int
+    download_function: Callable[[], str]
     text: str = None
 
     def extract_text(self, chain: Chain) -> "PdfSummary":
-        loader = PyPDFLoader(str(self.path))
+        loader = PyPDFLoader(self.download_function())
         docs = loader.load()
         self.text = chain.run(docs)
         return self
