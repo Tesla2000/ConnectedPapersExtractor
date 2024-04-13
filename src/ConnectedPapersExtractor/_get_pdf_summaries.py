@@ -30,6 +30,8 @@ def _get_pdf_summaries(
             .split("/")[-1]
             .rpartition(".")[0]
         )
+        if not link:
+            continue
         try:
             paper = next(arxiv.Client().results(arxiv.Search(id_list=[link])))
         except StopIteration:
