@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "connectedpapersextractor"
+version = "0.1.0"
+description = "A package for creating summaries based on https://www.connectedpapers.com/."
+authors = ["Tesla2000 <fratajczak124@gmail.com>"]
+license = "MIT License"
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+EnhancedWebdriver = "^0.1.3"
+arxiv = "^2.1.0"
+langchain = "^0.1.16"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
