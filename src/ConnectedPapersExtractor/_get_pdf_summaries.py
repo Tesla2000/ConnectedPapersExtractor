@@ -4,6 +4,8 @@ from typing import Union
 
 import arxiv
 from enhanced_webdriver import EnhancedWebdriver
+from selenium.webdriver.chrome.options import Options
+from undetected_chromedriver import ChromeOptions
 
 from . import ArticleFilter
 from .PdfSummary import PdfSummary
@@ -14,7 +16,9 @@ def _get_pdf_summaries(
     article_filter: ArticleFilter,
     dir_path: Union[str, Path] = Path("./"),
 ) -> list[PdfSummary]:
-    driver = EnhancedWebdriver.create()
+    options = ChromeOptions()
+    options.headless = True
+    driver = EnhancedWebdriver.create(undetected=True, options=options)
     driver.get(connected_papers_link)
     summaries = list()
     for index in count(1):
@@ -38,7 +42,7 @@ def _get_pdf_summaries(
             continue
         summaries.append(
             PdfSummary(
-                download_function=lambda: paper.download_pdf(dirpath=str(dir_path)),
+                download_args=(paper, str(dir_path),),
                 year=int(
                     driver.get_text_of_element(
                         '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'
