@@ -2,9 +2,10 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from PyPDF2.errors import PdfReadError
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
-from pypdf.errors import PdfStreamError
+from PyPDF2 import PdfReader
 
 
 @dataclass
@@ -22,16 +23,24 @@ class PdfSummary:
         return documents
 
     def is_valid(self) -> bool:
+        io = self.file_path.open("rb")
         try:
-            PyPDFLoader(str(self.file_path)).load()
-        except PdfStreamError:
+            PdfReader(io)
+        except PdfReadError:
+            io.close()
             os.remove(str(self.file_path.absolute()))
             return False
         return True
 
     @property
     def n_pages(self) -> int:
+        io = self.file_path.open("rb")
         if self._n_pages is None:
-            loader = PyPDFLoader(str(self.file_path))
-            self._n_pages = len(loader.load_and_split())
+            try:
+                self._n_pages = len(PdfReader(io).pages)
+            finally:
+                io.close()
         return self._n_pages
+
+
+PdfSummaries = list[PdfSummary]

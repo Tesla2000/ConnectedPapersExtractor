@@ -7,11 +7,11 @@ from langchain_core.messages import BaseMessage
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import Runnable
 
-from .PdfSummary import PdfSummary
+from .PdfSummary import PdfSummaries
 from ._extract_documents import _extract_documents
 
 
-def create_related_work(summaries: list[PdfSummary], llm: Union[
+def create_related_work(summaries: PdfSummaries, llm: Union[
     Runnable[LanguageModelInput, str], Runnable[LanguageModelInput, BaseMessage]
 ]) -> str:
     documents = _extract_documents(summaries)
