@@ -8,11 +8,14 @@ license = "MIT License"
 [tool.poetry.dependencies]
 python = "^3.8.1"
 EnhancedWebdriver = "^0.1.3"
-arxiv = "^2.1.0"
 langchain = "^0.1.16"
 langchain-openai = "^0.1.3"
 undetected-chromedriver = "^3.5.5"
 pypdf = "^4.2.0"
+download = "^0.3.5"
+chromedriver-autoinstaller = "^0.6.4"
+chromadb = "^0.5.0"
+langchain-experimental = "^0.0.57"
 
 [tool.poetry.dev-dependencies]
 
