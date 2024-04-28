@@ -17,7 +17,7 @@ def _get_pdf_summaries(
     dir_path: Union[str, Path] = Path("./"),
 ) -> PdfSummaries:
     options = ChromeOptions()
-    options.headless = True
+    # options.headless = True
     driver = EnhancedWebdriver.create(undetected=True, options=options)
     driver.get(connected_papers_link)
     summaries = list()
@@ -41,7 +41,7 @@ def _get_pdf_summaries(
             != "PDF"
         ):
             continue
-        pass
+        title = driver.get_text_of_element('//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[1]/div/a')
         file_path = dir_path.joinpath(link.rpartition("/")[-1]).with_suffix(".pdf")
         summary = PdfSummary(
             file_path=file_path,
@@ -55,6 +55,7 @@ def _get_pdf_summaries(
                     '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[4]/div[1]'
                 ).split()[0]
             ),
+            title=title,
         )
         summaries.append(summary)
         downloads.append(
