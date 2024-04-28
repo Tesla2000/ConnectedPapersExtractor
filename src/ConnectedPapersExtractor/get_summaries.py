@@ -19,7 +19,7 @@ def get_summaries(
     pdf_output: Union[Path, str, None] = None,
     article_filter: ArticleFilter = _NoFilter(),
 ) -> PdfSummaries:
-    temp_pdf = pdf_output or Path(__file__).parent.joinpath("_temp_pfd_files")
+    temp_pdf = pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path)
     temp_pdf.mkdir(exist_ok=True, parents=True)
     summaries: list[PdfSummary] = list(
         filter(
