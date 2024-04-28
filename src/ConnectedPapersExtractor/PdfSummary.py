@@ -5,7 +5,7 @@ from pathlib import Path
 from PyPDF2.errors import PdfReadError
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
-from PyPDF2 import PdfReader
+from PyPDF2 import PdfReader, PageObject
 
 
 @dataclass
@@ -15,6 +15,7 @@ class PdfSummary:
     year: int = None
     citations: int = None
     _n_pages: int = field(init=False, default=None)
+    _n_words: int = field(init=False, default=None)
     docs: list[Document] = field(init=False, default=None)
     text_summary: list[Document] = field(init=False, default=None)
 
@@ -40,10 +41,24 @@ class PdfSummary:
         io = self.file_path.open("rb")
         if self._n_pages is None:
             try:
-                self._n_pages = len(PdfReader(io).pages)
+                reader = PdfReader(io)
+                self._n_pages = len(reader.pages)
+                self._n_words = sum(map(len, map(str.split, map(PageObject.extract_text, reader.pages))))
             finally:
                 io.close()
         return self._n_pages
+
+    @property
+    def n_words(self) -> int:
+        io = self.file_path.open("rb")
+        if self._n_words is None:
+            try:
+                reader = PdfReader(io)
+                self._n_pages = len(reader.pages)
+                self._n_words = sum(map(len, map(str.split, map(PageObject.extract_text, reader.pages))))
+            finally:
+                io.close()
+        return self._n_words
 
 
 PdfSummaries = list[PdfSummary]

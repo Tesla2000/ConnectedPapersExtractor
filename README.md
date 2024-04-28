@@ -11,31 +11,25 @@ Installation:
 Code example:
 `
 
+    import os
     from pathlib import Path
-    from langchain.chains.summarize import load_summarize_chain
-    from langchain_openai import ChatOpenAI
     
-    from ConnectedPapersExtractor import get_summaries, ArticleFilter, PdfSummary
+    from src.ConnectedPapersExtractor import get_summaries, ArticleFilter, PdfSummaries
+    from src.ConnectedPapersExtractor.create_related_work import create_related_work
     
     if __name__ == "__main__":
-    
         class Filter(ArticleFilter):
-            def filter(self, summaries: list[PdfSummary]) -> list[PdfSummary]:
-                return list(summary for summary in summaries if summary.citations > 80)
+            def filter(self, summaries: PdfSummaries) -> PdfSummaries:
+                return list(summary for summary in summaries if summary.n_words < 10000)
     
-        connected_papers_url = "https://www.connectedpapers.com/main/5ed5723980bd28c3626182644ca837cc3ca30b07/Adaptive-Genomic-Evolution-of-Neural-Network-Topologies-(AGENT)-for-State%20to%20Action-Mapping-in-Autonomous-Agents/graph"
-        llm = ChatOpenAI(
-            temperature=0,
-            model_name="gpt-3.5-turbo-1106",
-            api_key=Path("api_token").read_text().strip(),
-        )
-        chain = load_summarize_chain(llm, chain_type="map_reduce")
-        article_filter = Filter()
+    
+        connected_papers_url = "https://www.connectedpapers.com/main/d1bb97ac84e81b10f3a60d7c634c6c0c26437072/Can-LLMs-be-Good-Financial-Advisors%3F%3A-An-Initial-Study-in-Personal-Decision-Making-for-Optimized-Outcomes/graph"
         summaries = get_summaries(
-            connected_papers_url=connected_papers_url,
-            chain=chain,
-            article_filter=article_filter,
+            connected_papers_url,
             pdf_output=Path("pdf_files"),
+            article_filter=Filter(),
         )
-        print("\n".join(summary.text for summary in summaries))
+    
+        related_work = create_related_work(summaries, refine=False)
+        print(related_work)
 `

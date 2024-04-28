@@ -1,6 +1,6 @@
 import json
 from dataclasses import asdict
-from typing import Union, Optional, Callable
+from typing import Union, Optional
 
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
@@ -9,40 +9,45 @@ from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import BaseMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable
-from openai.types import Embedding
+from openai import BadRequestError
 
 from . import Config
+from .MainPartsExtractor import MainPartsExtractor
 from .PdfSummary import PdfSummaries
-from .conv2docs import conv2docs
+from ._add_docs import _add_docs
 
 
-def summarize_documents_piecemeal(
+def _summarize_documents_piecemeal(
     summaries: PdfSummaries,
+    main_parts_extractor: MainPartsExtractor,
     llm: Union[
         Runnable[LanguageModelInput, str],
         Optional[Runnable[LanguageModelInput, BaseMessage]],
     ] = None,
     embeddings: Optional[Embeddings] = None,
-    embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None,
-    load_embeddings: bool = True,
 ) -> PdfSummaries:
     prompt = ChatPromptTemplate.from_template(
-    """
+        """
     Write a concise summary of the following:
     "{text}"
     CONCISE SUMMARY:
     """
     )
     llm_chain = LLMChain(llm=llm, prompt=prompt)
-    stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
-    summaries = conv2docs(summaries, embeddings)
+    stuff_chain = StuffDocumentsChain(
+        llm_chain=llm_chain, document_variable_name="text"
+    )
     metadata_path = summaries[0].file_path.parent.joinpath(Config.metadate_file_name)
     for summary in summaries:
         if summary.text_summary is not None:
             continue
-        # docs = extract_main_parts(summary, embeddings_function, load_embeddings)
-        docs = summary.docs
-        text_summary = stuff_chain.run(docs)
+        _add_docs(summary, embeddings)
+        docs = main_parts_extractor.extract(summary)
+        try:
+            text_summary = stuff_chain.run(docs)
+        except BadRequestError as e:
+            e.message += "\nConsider changing  value of article_filter"
+            raise e
         summary.text_summary = text_summary
         summary_as_dict = asdict(summary)
         summary_as_dict.pop("docs")

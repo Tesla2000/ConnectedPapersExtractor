@@ -1,4 +1,3 @@
-from operator import attrgetter
 from typing import Union, Optional
 
 from langchain.chains.llm import LLMChain
@@ -8,10 +7,13 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import Runnable
 
 
-def _combine_summaries(combined_summaries: str, llm: Union[
+def _combine_summaries(
+    combined_summaries: str,
+    llm: Union[
         Runnable[LanguageModelInput, str],
         Optional[Runnable[LanguageModelInput, BaseMessage]],
-    ]) -> str:
+    ],
+) -> str:
     reduce_template = """The following is set of summaries of scientific article:\n
     {docs}
     Take these and distill it into a related work. 

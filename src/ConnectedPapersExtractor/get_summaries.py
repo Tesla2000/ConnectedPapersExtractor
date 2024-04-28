@@ -9,15 +9,15 @@ from ._get_pdf_summaries import _get_pdf_summaries
 from .Config import Config
 
 
-class _NoFilter(ArticleFilter):
+class _OpenAIFilter(ArticleFilter):
     def filter(self, summaries: PdfSummaries) -> PdfSummaries:
-        return summaries
+        return list(summary for summary in summaries if summary.n_words < 10000)
 
 
 def get_summaries(
     connected_papers_url: str,
     pdf_output: Union[Path, str, None] = None,
-    article_filter: ArticleFilter = _NoFilter(),
+    article_filter: ArticleFilter = _OpenAIFilter(),
 ) -> PdfSummaries:
     temp_pdf = pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path)
     temp_pdf.mkdir(exist_ok=True, parents=True)

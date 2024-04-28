@@ -3,10 +3,29 @@ from typing import Optional, Callable
 
 import numpy as np
 import openai
+from langchain.vectorstores import faiss
 from langchain_core.documents import Document
 from openai.types import Embedding
 
-from . import Config, PdfSummary
+from . import PdfSummary, Config
+from .MainPartsExtractor import MainPartsExtractor
+
+
+class _AIExtractor(MainPartsExtractor):
+
+    def extract(self, summary: PdfSummary) -> list[Document]:
+        array = _get_embeddings(summary)
+        num_clusters = 5
+        dimension = array.shape[1]
+        kmeans = faiss.Kmeans(dimension, num_clusters, niter=20, verbose=True)
+        kmeans.train(array)
+        centroids = kmeans.centroids
+        index = faiss.IndexFlatL2(dimension)
+        index.add(array)
+        D, I = index.search(centroids, 1)
+        sorted_array = np.sort(I, axis=0)
+        sorted_array = sorted_array.flatten()
+        return [summary.docs[i] for i in sorted_array]
 
 
 def _openai_embed(pages: list[str]) -> list[Embedding]:
