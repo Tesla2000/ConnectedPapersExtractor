@@ -23,13 +23,10 @@ def _get_pdf_summaries(
     summaries = list()
     downloads = list()
     for index in count(1):
-        if not driver.is_element(
+        if not driver.click(
             f'//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[{index}]'
         ):
             break
-        driver.click(
-            f'//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[{index}]'
-        )
         link = driver.get_attribute(
             '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]',
             "href",
