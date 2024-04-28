@@ -12,7 +12,6 @@ from .MainPartsExtractor import MainPartsExtractor
 
 
 class _AIExtractor(MainPartsExtractor):
-
     def extract(self, summary: PdfSummary) -> list[Document]:
         array = _get_embeddings(summary)
         num_clusters = 5

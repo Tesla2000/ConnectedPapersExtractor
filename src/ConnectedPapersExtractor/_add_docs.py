@@ -5,7 +5,7 @@ from langchain_core.embeddings import Embeddings
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_openai import OpenAIEmbeddings
 
-from src.ConnectedPapersExtractor import PdfSummary
+from . import PdfSummary
 
 
 def _add_docs(

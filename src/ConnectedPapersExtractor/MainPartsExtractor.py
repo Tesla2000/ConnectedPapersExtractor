@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from langchain_core.documents import Document
 
-from src.ConnectedPapersExtractor import PdfSummary
+from . import PdfSummary
 
 
 class MainPartsExtractor(ABC):
@@ -12,6 +12,5 @@ class MainPartsExtractor(ABC):
 
 
 class _DefaultExtractor(MainPartsExtractor):
-
     def extract(self, summary: PdfSummary) -> list[Document]:
         return summary.docs

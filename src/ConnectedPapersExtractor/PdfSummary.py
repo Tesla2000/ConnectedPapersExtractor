@@ -43,7 +43,9 @@ class PdfSummary:
             try:
                 reader = PdfReader(io)
                 self._n_pages = len(reader.pages)
-                self._n_words = sum(map(len, map(str.split, map(PageObject.extract_text, reader.pages))))
+                self._n_words = sum(
+                    map(len, map(str.split, map(PageObject.extract_text, reader.pages)))
+                )
             finally:
                 io.close()
         return self._n_pages
@@ -55,7 +57,9 @@ class PdfSummary:
             try:
                 reader = PdfReader(io)
                 self._n_pages = len(reader.pages)
-                self._n_words = sum(map(len, map(str.split, map(PageObject.extract_text, reader.pages))))
+                self._n_words = sum(
+                    map(len, map(str.split, map(PageObject.extract_text, reader.pages)))
+                )
             finally:
                 io.close()
         return self._n_words
