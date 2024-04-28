@@ -350,6 +350,17 @@ python-versions = ">=3.7"
 test = ["pytest (>=6)"]
 
 [[package]]
+name = "faiss-cpu"
+version = "1.8.0"
+description = "A library for efficient similarity search and clustering of dense vectors."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+numpy = "*"
+
+[[package]]
 name = "fastapi"
 version = "0.110.2"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
@@ -1791,7 +1802,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-ena
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8.1"
-content-hash = "cb47705fd32ce07f47d44bfee1bcc21ae459538bd9e8978104c62a28ff735e5d"
+content-hash = "29a0ee212cf89359f49c7c7ce5d1b973cdab9292ccb0850ff2cd9afe507f43a8"
 
 [metadata.files]
 aiohttp = []
@@ -1821,6 +1832,7 @@ distro = []
 download = []
 enhancedwebdriver = []
 exceptiongroup = []
+faiss-cpu = []
 fastapi = []
 filelock = []
 flatbuffers = []

@@ -17,6 +17,7 @@ chromedriver-autoinstaller = "^0.6.4"
 chromadb = "^0.5.0"
 langchain-experimental = "^0.0.57"
 PyPDF2 = "^3.0.1"
+faiss-cpu = "^1.8.0"
 
 [tool.poetry.dev-dependencies]
 

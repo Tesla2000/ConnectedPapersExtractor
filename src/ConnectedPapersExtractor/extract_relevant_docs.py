@@ -1,22 +1,20 @@
 from typing import Optional, Callable
 
+import faiss
 import numpy as np
 from chromadb import Embeddings
 from langchain_core.documents import Document
 from openai.types import Embedding
 
-from . import PdfSummaries, Config
+from . import PdfSummaries
+from .conv2docs import conv2docs
 from ._get_embeddings import _get_embeddings
 
 
-def _extract_documents(summaries: PdfSummaries, embeddings: Optional[Embeddings] = None, embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None) -> list[Document]:
+def extract_relevant_docs(summaries: PdfSummaries, docs: list[Document], embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None, load_embeddings: bool = True) -> list[Document]:
     if not summaries:
         raise ValueError("No summaries provided")
-    embeddings_path = summaries[0].file_path.parent.joinpath(Config.embedding_file_name)
-    if not summaries[0].file_path.parent.joinpath(Config.embedding_file_name).exists():
-        array = _get_embeddings(summaries, embeddings_path, embeddings, embeddings_function)
-    else:
-        array = np.fromfile(embeddings_path)
+    array = _get_embeddings(summaries, docs, embeddings_function, load_embeddings)
     num_clusters = 50
     dimension = array.shape[1]
     kmeans = faiss.Kmeans(dimension, num_clusters, niter=20, verbose=True)
@@ -27,4 +25,4 @@ def _extract_documents(summaries: PdfSummaries, embeddings: Optional[Embeddings]
     D, I = index.search(centroids, 1)
     sorted_array = np.sort(I, axis=0)
     sorted_array = sorted_array.flatten()
-    extracted_docs = [docs[i] for i in sorted_array]
+    return [docs[i] for i in sorted_array]

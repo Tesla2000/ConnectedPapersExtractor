@@ -1,16 +1,13 @@
-from itertools import chain
-from operator import attrgetter
+from pathlib import Path
 from pathlib import Path
 from typing import Optional, Callable
 
 import numpy as np
 import openai
-from langchain_core.embeddings import Embeddings
-from langchain_experimental.text_splitter import SemanticChunker
-from langchain_openai import OpenAIEmbeddings
+from langchain_core.documents import Document
 from openai.types import Embedding
 
-from . import PdfSummaries, PdfSummary
+from . import PdfSummaries, Config
 
 
 def _openai_embed(pages: list[str]) -> list[Embedding]:
@@ -21,21 +18,25 @@ def _openai_embed(pages: list[str]) -> list[Embedding]:
     return response.data
 
 
-def _get_embeddings(summaries: PdfSummaries, embeddings_path: Path, embeddings: Optional[Embeddings] = None,
-                    embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None):
-    if embeddings is None:
-        embeddings = OpenAIEmbeddings()
-    raw_documents = list(chain.from_iterable(map(PdfSummary.extract_documents, summaries)))
-    raw_text = '\n\n\n'.join(map(attrgetter("page_content"), raw_documents))
-    text_splitter = SemanticChunker(
-        embeddings, breakpoint_threshold_type="interquartile"
-    )
-    docs = text_splitter.create_documents([raw_text])
+def _generate_embeddings(embeddings_path: Path, embeddings_shape_path: Path, docs: list[Document],
+                         embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None):
     if embeddings_function is None:
         embeddings_function = _openai_embed
     embeddings = embeddings_function([doc.page_content for doc in docs])
     vectors = [embedding.embedding for embedding in embeddings]
     array = np.array(vectors)
     array = array.astype('float32')
-    array.tofile(embeddings_path)
+    embeddings_path.write_bytes(array.tobytes())
+    embeddings_shape_path.write_text(str(array.shape))
+    return array
+
+
+def _get_embeddings(summaries: PdfSummaries, docs: list[Document], embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None, load_embeddings: bool = True) -> np.ndarray:
+    embeddings_path = summaries[0].file_path.parent.joinpath(Config.embedding_file_name)
+    embeddings_shape_path = summaries[0].file_path.parent.joinpath(Config.embedding_shape_path)
+    if not embeddings_path.exists() or not embeddings_shape_path.exists() or not load_embeddings:
+        array = _generate_embeddings(embeddings_path, embeddings_shape_path, docs, embeddings_function)
+    else:
+        array = np.frombuffer(embeddings_path.read_bytes(), dtype=np.float32)
+        array = array.reshape(eval(embeddings_shape_path.read_text()))
     return array
