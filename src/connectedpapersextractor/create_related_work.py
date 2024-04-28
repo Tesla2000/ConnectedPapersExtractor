@@ -30,6 +30,7 @@ def create_related_work(
         main_parts_extractor = _DefaultExtractor()
     if llm is None:
         llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
+        llm.max_tokens = 16385
     summaries_with_text = _summarize_documents(
         summaries, main_parts_extractor, llm, embeddings
     )

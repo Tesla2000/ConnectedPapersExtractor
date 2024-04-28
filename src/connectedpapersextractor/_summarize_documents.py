@@ -4,14 +4,13 @@ from typing import Optional
 
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLanguageModel
-from openai import BadRequestError
 
 from . import Config
 from .MainPartsExtractor import MainPartsExtractor
 from .PdfSummary import PdfSummaries
 from ._add_docs import _add_docs
 from ._refine_documents import _refine_documents
-from ._stuff_documents import _stuff_documents
+from ._stuff_documents import _stuff_documents, stuff_prompt
 
 
 def _summarize_documents(
@@ -26,9 +25,13 @@ def _summarize_documents(
             continue
         _add_docs(summary, embeddings)
         docs = main_parts_extractor.extract(summary)
-        try:
+        if llm.max_tokens is None:
+            raise ValueError(f"{llm=} max_tokens argument is None.\nAssign integer value to llm.max_tokens=value")
+        if llm.get_num_tokens(" ".join(doc.page_content for doc in docs) + stuff_prompt) < llm.max_tokens:
+            max_tokens, llm.max_tokens = llm.max_tokens, None
             text_summary = _stuff_documents(llm, docs)
-        except BadRequestError:
+            llm.max_tokens = max_tokens
+        else:
             text_summary = _refine_documents(llm, docs)
         summary.text_summary = text_summary
         summary_as_dict = asdict(summary)
