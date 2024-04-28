@@ -21,7 +21,12 @@ def get_summaries(
 ) -> PdfSummaries:
     temp_pdf = pdf_output or Path(__file__).parent.joinpath("_temp_pfd_files")
     temp_pdf.mkdir(exist_ok=True, parents=True)
-    summaries = tuple(filter(PdfSummary.is_valid, (PdfSummary(pdf_file) for pdf_file in temp_pdf.glob("*.pdf"))))
+    summaries = tuple(
+        filter(
+            PdfSummary.is_valid,
+            (PdfSummary(pdf_file) for pdf_file in temp_pdf.glob("*.pdf")),
+        )
+    )
     if not summaries:
         summaries = _get_pdf_summaries(
             connected_papers_url,

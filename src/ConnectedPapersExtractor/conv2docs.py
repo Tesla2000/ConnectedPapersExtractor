@@ -10,11 +10,15 @@ from langchain_openai import OpenAIEmbeddings
 from src.ConnectedPapersExtractor import PdfSummary, PdfSummaries
 
 
-def conv2docs(summaries: PdfSummaries, embeddings: Optional[Embeddings] = None) -> list[Document]:
+def conv2docs(
+    summaries: PdfSummaries, embeddings: Optional[Embeddings] = None
+) -> list[Document]:
     if embeddings is None:
         embeddings = OpenAIEmbeddings()
-    raw_documents = list(chain.from_iterable(map(PdfSummary.extract_documents, summaries)))
-    raw_text = '\n\n\n'.join(map(attrgetter("page_content"), raw_documents))
+    raw_documents = list(
+        chain.from_iterable(map(PdfSummary.extract_documents, summaries))
+    )
+    raw_text = "\n\n\n".join(map(attrgetter("page_content"), raw_documents))
     text_splitter = SemanticChunker(
         embeddings, breakpoint_threshold_type="interquartile"
     )

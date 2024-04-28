@@ -13,24 +13,30 @@ from . import summarize_documents
 from .PdfSummary import PdfSummaries
 
 
-def create_related_work(summaries: PdfSummaries, llm: Union[
-    Runnable[LanguageModelInput, str], Optional[Runnable[LanguageModelInput, BaseMessage]
-    ]] = None, embeddings: Optional[Embeddings] = None,
-                        embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None,
-                        load_embeddings: bool = True) -> str:
+def create_related_work(
+    summaries: PdfSummaries,
+    llm: Union[
+        Runnable[LanguageModelInput, str],
+        Optional[Runnable[LanguageModelInput, BaseMessage]],
+    ] = None,
+    embeddings: Optional[Embeddings] = None,
+    embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None,
+    load_embeddings: bool = True,
+) -> str:
     if llm is None:
         llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-    concat_summaries = summarize_documents(summaries, llm, embeddings, embeddings_function, load_embeddings)
-    prompt = ChatPromptTemplate.from_template("""
+    concat_summaries = summarize_documents(
+        summaries, llm, embeddings, embeddings_function, load_embeddings
+    )
+    prompt = ChatPromptTemplate.from_template(
+        """
     You will be given different concatenated summaries of parts of scientific papers. 
     Your task is to convert these into a coherent related work.
     Passage:
     ```{text}```
     RELATED WORK:
-    """)
-    chain = (
-        prompt
-        | llm
-        | StrOutputParser())
+    """
+    )
+    chain = prompt | llm | StrOutputParser()
     related_work = chain.invoke({"text": concat_summaries})
     return related_work

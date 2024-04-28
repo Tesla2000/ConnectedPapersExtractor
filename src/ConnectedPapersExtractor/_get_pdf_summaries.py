@@ -34,27 +34,45 @@ def _get_pdf_summaries(
             '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]',
             "href",
         )
-        if driver.get_text_of_element('//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]/span') != "PDF":
-            continue
-        file_path = dir_path.joinpath(link.rpartition('/')[-1]).with_suffix('.pdf')
-        summary = PdfSummary(
-                file_path=file_path,
-                year=int(
-                    driver.get_text_of_element(
-                        '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'
-                    )
-                ),
-                citations=int(
-                    driver.get_text_of_element(
-                        '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[4]/div[1]'
-                    ).split()[0]
-                ),
+        if (
+            driver.get_text_of_element(
+                '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]/span'
             )
+            != "PDF"
+        ):
+            continue
+        file_path = dir_path.joinpath(link.rpartition("/")[-1]).with_suffix(".pdf")
+        summary = PdfSummary(
+            file_path=file_path,
+            year=int(
+                driver.get_text_of_element(
+                    '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'
+                )
+            ),
+            citations=int(
+                driver.get_text_of_element(
+                    '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[4]/div[1]'
+                ).split()[0]
+            ),
+        )
         summaries.append(summary)
-        downloads.append((link, str(file_path),))
+        downloads.append(
+            (
+                link,
+                str(file_path),
+            )
+        )
     driver.quit()
     for link, file_path in downloads:
         download(link, file_path)
     summaries = list(filter(PdfSummary.is_valid, summaries))
-    dir_path.joinpath(Config.metadate_file_name).write_text(json.dumps(dict((str(summary_dict.pop("file_path")), summary_dict) for summary_dict in map(asdict, summaries)), indent=2))
+    dir_path.joinpath(Config.metadate_file_name).write_text(
+        json.dumps(
+            dict(
+                (str(summary_dict.pop("file_path")), summary_dict)
+                for summary_dict in map(asdict, summaries)
+            ),
+            indent=2,
+        )
+    )
     return summaries

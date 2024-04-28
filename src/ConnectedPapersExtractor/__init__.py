@@ -1,4 +1,13 @@
-__all__ = ["ArticleFilter", "PdfSummary", "PdfSummaries", "get_summaries", "Config", "summarize_documents", "conv2docs", "extract_relevant_docs"]
+__all__ = [
+    "ArticleFilter",
+    "PdfSummary",
+    "PdfSummaries",
+    "get_summaries",
+    "Config",
+    "summarize_documents",
+    "conv2docs",
+    "extract_relevant_docs",
+]
 
 from .ArticleFilter import ArticleFilter
 from .PdfSummary import PdfSummary, PdfSummaries
