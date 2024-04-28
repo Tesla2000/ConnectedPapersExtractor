@@ -21,7 +21,7 @@ def get_summaries(
 ) -> PdfSummaries:
     temp_pdf = pdf_output or Path(__file__).parent.joinpath("_temp_pfd_files")
     temp_pdf.mkdir(exist_ok=True, parents=True)
-    summaries = tuple(
+    summaries: list[PdfSummary] = list(
         filter(
             PdfSummary.is_valid,
             (PdfSummary(pdf_file) for pdf_file in temp_pdf.glob("*.pdf")),
@@ -35,8 +35,8 @@ def get_summaries(
     else:
         metadata = json.loads(temp_pdf.joinpath(Config.metadate_file_name).read_text())
         for summary in summaries:
-            summary.year = metadata[str(summary.file_path)]["year"]
-            summary.citations = metadata[str(summary.file_path)]["citations"]
+            for key, value in metadata[str(summary.file_path)].items():
+                setattr(summary, key, value)
     if temp_pdf != pdf_output:
         shutil.rmtree(temp_pdf)
     return article_filter.filter(summaries)

@@ -11,9 +11,12 @@ from PyPDF2 import PdfReader
 @dataclass
 class PdfSummary:
     file_path: Path
+    title: str = None
     year: int = None
     citations: int = None
     _n_pages: int = field(init=False, default=None)
+    docs: list[Document] = field(init=False, default=None)
+    text_summary: list[Document] = field(init=False, default=None)
 
     def extract_documents(self) -> list[Document]:
         loader = PyPDFLoader(str(self.file_path))

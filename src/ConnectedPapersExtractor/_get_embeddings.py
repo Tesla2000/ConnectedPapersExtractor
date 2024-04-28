@@ -1,5 +1,4 @@
 from pathlib import Path
-from pathlib import Path
 from typing import Optional, Callable
 
 import numpy as np
@@ -7,7 +6,7 @@ import openai
 from langchain_core.documents import Document
 from openai.types import Embedding
 
-from . import PdfSummaries, Config
+from . import Config, PdfSummary
 
 
 def _openai_embed(pages: list[str]) -> list[Embedding]:
@@ -33,14 +32,13 @@ def _generate_embeddings(
 
 
 def _get_embeddings(
-    summaries: PdfSummaries,
-    docs: list[Document],
+    summary: PdfSummary,
     embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None,
     load_embeddings: bool = True,
 ) -> np.ndarray:
-    embeddings_path = summaries[0].file_path.parent.joinpath(Config.embedding_file_name)
-    embeddings_shape_path = summaries[0].file_path.parent.joinpath(
-        Config.embedding_shape_path
+    embeddings_path = summary.file_path.with_suffix(Config.embedding_extension)
+    embeddings_shape_path = summary.file_path.with_suffix(
+        Config.embedding_shape_extension
     )
     if (
         not embeddings_path.exists()
@@ -48,7 +46,7 @@ def _get_embeddings(
         or not load_embeddings
     ):
         array = _generate_embeddings(
-            embeddings_path, embeddings_shape_path, docs, embeddings_function
+            embeddings_path, embeddings_shape_path, summary.docs, embeddings_function
         )
     else:
         array = np.frombuffer(embeddings_path.read_bytes(), dtype=np.float32)

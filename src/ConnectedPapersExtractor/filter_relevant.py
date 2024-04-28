@@ -1,18 +1,22 @@
+import re
 from typing import Union, Optional, Callable
 
+from langchain.chains.llm import LLMChain
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import BaseMessage
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.runnables import Runnable
-from langchain_openai import ChatOpenAI
 from openai.types import Embedding
+from tqdm import tqdm
 
-from . import summarize_documents_piecemeal
+from .conv2docs import conv2docs
 from .PdfSummary import PdfSummaries
-from .combine_summaries import combine_summaries
+from .extract_main_parts import extract_main_parts
 
 
-def create_related_work(
+def summarize_documents(
     summaries: PdfSummaries,
     llm: Union[
         Runnable[LanguageModelInput, str],
@@ -22,9 +26,9 @@ def create_related_work(
     embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None,
     load_embeddings: bool = True,
 ) -> str:
-    if llm is None:
-        llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-    summaries_with_text = summarize_documents_piecemeal(
-        summaries, llm, embeddings, embeddings_function, load_embeddings
-    )
-    return combine_summaries(summaries_with_text, llm)
+    map_template = """You will be passes parts of a scientific document one by one. 
+    {docs}
+    Based on this list of docs, please identify the main themes 
+    Helpful Answer:"""
+    map_prompt = PromptTemplate.from_template(map_template)
+    map_chain = LLMChain(llm=llm, prompt=map_prompt)

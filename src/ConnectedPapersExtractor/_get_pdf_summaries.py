@@ -8,7 +8,7 @@ from download import download
 from enhanced_webdriver import EnhancedWebdriver
 from undetected_chromedriver import ChromeOptions
 
-from . import PdfSummaries
+from . import PdfSummaries, PdfSummary
 from .Config import Config
 
 
@@ -41,6 +41,7 @@ def _get_pdf_summaries(
             != "PDF"
         ):
             continue
+        pass
         file_path = dir_path.joinpath(link.rpartition("/")[-1]).with_suffix(".pdf")
         summary = PdfSummary(
             file_path=file_path,
