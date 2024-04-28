@@ -1,60 +1,79 @@
+import json
+from dataclasses import asdict
 from itertools import count
 from pathlib import Path
 from typing import Union
 
-import arxiv
+from download import download
 from enhanced_webdriver import EnhancedWebdriver
-from selenium.webdriver.chrome.options import Options
 from undetected_chromedriver import ChromeOptions
 
-from . import ArticleFilter
-from .PdfSummary import PdfSummary
+from . import PdfSummaries, PdfSummary
+from .Config import Config
 
 
 def _get_pdf_summaries(
     connected_papers_link: str,
-    article_filter: ArticleFilter,
     dir_path: Union[str, Path] = Path("./"),
-) -> list[PdfSummary]:
+) -> PdfSummaries:
     options = ChromeOptions()
     options.headless = True
     driver = EnhancedWebdriver.create(undetected=True, options=options)
     driver.get(connected_papers_link)
     summaries = list()
+    downloads = list()
     for index in count(1):
         if not driver.click(
             f'//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[{index}]'
         ):
             break
-        link = (
-            driver.get_attribute(
-                '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]',
-                "href",
-            )
-            .split("/")[-1]
-            .rpartition(".")[0]
+        link = driver.get_attribute(
+            '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]',
+            "href",
         )
-        if not link:
+        if (
+            driver.get_text_of_element(
+                '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]/span'
+            )
+            != "PDF"
+        ):
             continue
-        try:
-            paper = next(arxiv.Client().results(arxiv.Search(id_list=[link])))
-        except StopIteration:
-            continue
-        summaries.append(
-            PdfSummary(
-                download_args=(paper, str(dir_path),),
-                year=int(
-                    driver.get_text_of_element(
-                        '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'
-                    )
-                ),
-                citations=int(
-                    driver.get_text_of_element(
-                        '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[4]/div[1]'
-                    ).split()[0]
-                ),
+        title = driver.get_text_of_element(
+            '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[1]/div/a'
+        )
+        file_path = dir_path.joinpath(link.rpartition("/")[-1]).with_suffix(".pdf")
+        summary = PdfSummary(
+            file_path=file_path,
+            year=int(
+                driver.get_text_of_element(
+                    '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'
+                )
+            ),
+            citations=int(
+                driver.get_text_of_element(
+                    '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[4]/div[1]'
+                ).split()[0]
+            ),
+            title=title,
+        )
+        summaries.append(summary)
+        downloads.append(
+            (
+                link,
+                str(file_path),
             )
         )
-    summaries = article_filter.filter(summaries)
-
+    driver.quit()
+    for link, file_path in downloads:
+        download(link, file_path)
+    summaries = list(filter(PdfSummary.is_valid, summaries))
+    dir_path.joinpath(Config.metadate_file_name).write_text(
+        json.dumps(
+            dict(
+                (str(summary_dict.pop("file_path")), summary_dict)
+                for summary_dict in map(asdict, summaries)
+            ),
+            indent=2,
+        )
+    )
     return summaries

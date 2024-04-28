@@ -1,33 +1,42 @@
+import json
 import shutil
 from pathlib import Path
 from typing import Union
 
-from langchain.chains.base import Chain
-
-from .ArticleFilter import ArticleFilter
-from .PdfSummary import PdfSummary
+from . import ArticleFilter, PdfSummaries
+from . import PdfSummary
 from ._get_pdf_summaries import _get_pdf_summaries
+from .Config import Config
 
 
-class _NoFilter(ArticleFilter):
-    def filter(self, summaries: list[PdfSummary]) -> list[PdfSummary]:
-        return summaries
+class _OpenAIFilter(ArticleFilter):
+    def filter(self, summaries: PdfSummaries) -> PdfSummaries:
+        return list(summary for summary in summaries if summary.n_words < 10000)
 
 
 def get_summaries(
     connected_papers_url: str,
-    chain: Chain,
-    pdf_output: Union[Path, str] = None,
-    article_filter: ArticleFilter = _NoFilter(),
-) -> list[PdfSummary]:
-    temp_pdf = pdf_output or Path(__file__).parent.joinpath("_temp_pfd_files")
+    pdf_output: Union[Path, str, None] = None,
+    article_filter: ArticleFilter = _OpenAIFilter(),
+) -> PdfSummaries:
+    temp_pdf = pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path)
     temp_pdf.mkdir(exist_ok=True, parents=True)
-    summaries = _get_pdf_summaries(
-        connected_papers_url,
-        article_filter,
-        temp_pdf,
+    summaries: list[PdfSummary] = list(
+        filter(
+            PdfSummary.is_valid,
+            (PdfSummary(pdf_file) for pdf_file in temp_pdf.glob("*.pdf")),
+        )
     )
-    output_summaries = list(summary.extract_text(chain) for summary in summaries)
+    if not summaries:
+        summaries = _get_pdf_summaries(
+            connected_papers_url,
+            temp_pdf,
+        )
+    else:
+        metadata = json.loads(temp_pdf.joinpath(Config.metadate_file_name).read_text())
+        for summary in summaries:
+            for key, value in metadata[str(summary.file_path)].items():
+                setattr(summary, key, value)
     if temp_pdf != pdf_output:
         shutil.rmtree(temp_pdf)
-    return output_summaries
+    return article_filter.filter(summaries)
