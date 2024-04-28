@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "connectedpapersextractor"
-version = "0.1.0"
+name = "ConnectedPapersExtractor"
+version = "0.1.1"
 description = "A package for creating summaries based on https://www.connectedpapers.com/."
 authors = ["Tesla2000 <fratajczak124@gmail.com>"]
 license = "MIT License"

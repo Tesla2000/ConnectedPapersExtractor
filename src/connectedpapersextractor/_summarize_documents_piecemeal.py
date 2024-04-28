@@ -1,6 +1,7 @@
 import json
 from dataclasses import asdict
 from typing import Union, Optional
+from warnings import warn
 
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
@@ -46,8 +47,8 @@ def _summarize_documents_piecemeal(
         try:
             text_summary = stuff_chain.run(docs)
         except BadRequestError as e:
-            e.message += "\nConsider changing  value of article_filter"
-            raise e
+            warn(e.message + "\nConsider changing  value of article_filter")
+            text_summary = e.message + "\nConsider changing  value of article_filter"
         summary.text_summary = text_summary
         summary_as_dict = asdict(summary)
         summary_as_dict.pop("docs")

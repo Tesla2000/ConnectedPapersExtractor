@@ -64,9 +64,14 @@ def _get_pdf_summaries(
             )
         )
     driver.quit()
+    failed_download = set()
     for link, file_path in downloads:
-        download(link, file_path)
-    summaries = list(filter(PdfSummary.is_valid, summaries))
+        try:
+            download(link, file_path)
+        except RuntimeError:
+            failed_download.add(file_path)
+    summaries = list(
+        summary for summary in summaries if summary.is_valid())
     dir_path.joinpath(Config.metadate_file_name).write_text(
         json.dumps(
             dict(

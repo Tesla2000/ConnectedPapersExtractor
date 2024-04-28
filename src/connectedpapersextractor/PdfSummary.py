@@ -27,6 +27,8 @@ class PdfSummary:
         return documents
 
     def is_valid(self) -> bool:
+        if not self.file_path.exists():
+            return False
         io = self.file_path.open("rb")
         try:
             PdfReader(io)
