@@ -11,7 +11,7 @@ from . import MainPartsExtractor
 from .MainPartsExtractor import _DefaultExtractor
 from .PdfSummary import PdfSummaries
 from ._combine_summaries import _combine_summaries
-from ._summarize_documents_piecemeal import _summarize_documents_piecemeal
+from ._summarize_documents import _summarize_documents
 
 
 def create_related_work(
@@ -30,7 +30,8 @@ def create_related_work(
         main_parts_extractor = _DefaultExtractor()
     if llm is None:
         llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-    summaries_with_text = _summarize_documents_piecemeal(
+        llm.max_tokens = 16385
+    summaries_with_text = _summarize_documents(
         summaries, main_parts_extractor, llm, embeddings
     )
     combined_summaries = "\n\n".join(
