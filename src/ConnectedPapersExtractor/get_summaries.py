@@ -1,7 +1,7 @@
 import json
 import shutil
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 
 from . import ArticleFilter, PdfSummaries
 from . import PdfSummary
@@ -17,8 +17,10 @@ class _OpenAIFilter(ArticleFilter):
 def get_summaries(
     connected_papers_url: str,
     pdf_output: Union[Path, str, None] = None,
-    article_filter: ArticleFilter = _OpenAIFilter(),
+    article_filter: Optional[ArticleFilter] = None,
 ) -> PdfSummaries:
+    if article_filter is None:
+        article_filter = _OpenAIFilter()
     temp_pdf = pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path)
     temp_pdf.mkdir(exist_ok=True, parents=True)
     summaries: list[PdfSummary] = list(
