@@ -24,6 +24,7 @@ class PdfSummary:
         documents = loader.load()
         for document in documents:
             document.metadata["source"] = str(self.file_path)
+        self.docs = documents
         return documents
 
     def is_valid(self) -> bool:

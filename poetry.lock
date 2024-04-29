@@ -40,25 +40,6 @@ python-versions = ">=3.8"
 typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.9\""}
 
 [[package]]
-name = "anyio"
-version = "4.3.0"
-description = "High level compatibility layer for multiple asynchronous event loop implementations"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-exceptiongroup = {version = ">=1.0.2", markers = "python_version < \"3.11\""}
-idna = ">=2.8"
-sniffio = ">=1.1"
-typing-extensions = {version = ">=4.1", markers = "python_version < \"3.11\""}
-
-[package.extras]
-doc = ["packaging", "Sphinx (>=7)", "sphinx-rtd-theme", "sphinx-autodoc-typehints (>=1.2.0)"]
-test = ["anyio", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypothesis (>=4.0)", "psutil (>=5.9)", "pytest (>=7.0)", "pytest-mock (>=3.6.1)", "trustme", "uvloop (>=0.17)"]
-trio = ["trio (>=0.23)"]
-
-[[package]]
 name = "async-timeout"
 version = "4.0.3"
 description = "Timeout context manager for asyncio programs"
@@ -130,11 +111,11 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7
 
 [[package]]
 name = "dataclasses-json"
-version = "0.6.4"
+version = "0.6.5"
 description = "Easily serialize dataclasses to and from JSON."
 category = "main"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "<4.0,>=3.7"
 
 [package.dependencies]
 marshmallow = ">=3.18.0,<4.0.0"
@@ -147,14 +128,6 @@ description = "Decorators for Humans"
 category = "main"
 optional = false
 python-versions = ">=3.5"
-
-[[package]]
-name = "distro"
-version = "1.9.0"
-description = "Distro - an OS platform information API"
-category = "main"
-optional = false
-python-versions = ">=3.6"
 
 [[package]]
 name = "download"
@@ -224,45 +197,6 @@ description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
 category = "main"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "httpcore"
-version = "1.0.5"
-description = "A minimal low-level HTTP client."
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-certifi = "*"
-h11 = ">=0.13,<0.15"
-
-[package.extras]
-asyncio = ["anyio (>=4.0,<5.0)"]
-http2 = ["h2 (>=3,<5)"]
-socks = ["socksio (>=1.0.0,<2.0.0)"]
-trio = ["trio (>=0.22.0,<0.26.0)"]
-
-[[package]]
-name = "httpx"
-version = "0.27.0"
-description = "The next generation HTTP client."
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-anyio = "*"
-certifi = "*"
-httpcore = ">=1.0.0,<2.0.0"
-idna = "*"
-sniffio = "*"
-
-[package.extras]
-brotli = ["brotli", "brotlicffi"]
-cli = ["click (>=8.0.0,<9.0.0)", "pygments (>=2.0.0,<3.0.0)", "rich (>=10,<14)"]
-http2 = ["h2 (>=3,<5)"]
-socks = ["socksio (>=1.0.0,<2.0.0)"]
 
 [[package]]
 name = "idna"
@@ -387,19 +321,6 @@ langchain-core = ">=0.1.41,<0.2.0"
 extended-testing = ["faker (>=19.3.1,<20.0.0)", "jinja2 (>=3,<4)", "pandas (>=2.0.1,<3.0.0)", "presidio-analyzer (>=2.2.352,<3.0.0)", "presidio-anonymizer (>=2.2.352,<3.0.0)", "sentence-transformers (>=2,<3)", "tabulate (>=0.9.0,<0.10.0)", "vowpal-wabbit-next (==0.6.0)"]
 
 [[package]]
-name = "langchain-openai"
-version = "0.1.4"
-description = "An integration package connecting OpenAI and LangChain"
-category = "main"
-optional = false
-python-versions = "<4.0,>=3.8.1"
-
-[package.dependencies]
-langchain-core = ">=0.1.46,<0.2.0"
-openai = ">=1.10.0,<2.0.0"
-tiktoken = ">=0.5.2,<1"
-
-[[package]]
 name = "langchain-text-splitters"
 version = "0.0.1"
 description = "LangChain text splitting utilities"
@@ -465,26 +386,6 @@ description = "Fundamental package for array computing in Python"
 category = "main"
 optional = false
 python-versions = ">=3.8"
-
-[[package]]
-name = "openai"
-version = "1.23.6"
-description = "The official Python library for the openai API"
-category = "main"
-optional = false
-python-versions = ">=3.7.1"
-
-[package.dependencies]
-anyio = ">=3.5.0,<5"
-distro = ">=1.7.0,<2"
-httpx = ">=0.23.0,<1"
-pydantic = ">=1.9.0,<3"
-sniffio = "*"
-tqdm = ">4"
-typing-extensions = ">=4.7,<5"
-
-[package.extras]
-datalib = ["numpy (>=1)", "pandas-stubs (>=1.1.0.11)", "pandas (>=1.2.3)"]
 
 [[package]]
 name = "orjson"
@@ -609,14 +510,6 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
-name = "regex"
-version = "2024.4.16"
-description = "Alternative regular expression module, to replace re."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[[package]]
 name = "requests"
 version = "2.31.0"
 description = "Python HTTP for Humans."
@@ -732,21 +625,6 @@ python-versions = ">=3.7"
 
 [package.extras]
 doc = ["reno", "sphinx", "tornado (>=4.5)"]
-
-[[package]]
-name = "tiktoken"
-version = "0.6.0"
-description = "tiktoken is a fast BPE tokeniser for use with OpenAI's models"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-regex = ">=2022.1.18"
-requests = ">=2.26.0"
-
-[package.extras]
-blobfile = ["blobfile (>=2)"]
 
 [[package]]
 name = "tqdm"
@@ -879,13 +757,12 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8.1"
-content-hash = "8c2682dd25fa2efee52b426d76d7710340685beb93981a8dd97876f2bd3b2eea"
+content-hash = "34a6c56da254dd5f16406a7d105381e2d28629adb6798c232d0cebabce3fdcd6"
 
 [metadata.files]
 aiohttp = []
 aiosignal = []
 annotated-types = []
-anyio = []
 async-timeout = []
 attrs = []
 certifi = []
@@ -895,15 +772,12 @@ chromedriver-autoinstaller = []
 colorama = []
 dataclasses-json = []
 decorator = []
-distro = []
 download = []
 enhancedwebdriver = []
 exceptiongroup = []
 frozenlist = []
 greenlet = []
 h11 = []
-httpcore = []
-httpx = []
 idna = []
 jsonpatch = []
 jsonpointer = []
@@ -911,14 +785,12 @@ langchain = []
 langchain-community = []
 langchain-core = []
 langchain-experimental = []
-langchain-openai = []
 langchain-text-splitters = []
 langsmith = []
 marshmallow = []
 multidict = []
 mypy-extensions = []
 numpy = []
-openai = []
 orjson = []
 outcome = []
 packaging = []
@@ -930,7 +802,6 @@ pypdf = []
 pypdf2 = []
 pysocks = []
 pyyaml = []
-regex = []
 requests = []
 retry = []
 selenium = []
@@ -939,7 +810,6 @@ sniffio = []
 sortedcontainers = []
 sqlalchemy = []
 tenacity = []
-tiktoken = []
 tqdm = []
 trio = []
 trio-websocket = []
