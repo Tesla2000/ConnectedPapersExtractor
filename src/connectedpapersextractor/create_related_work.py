@@ -5,7 +5,6 @@ from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import BaseMessage
 from langchain_core.runnables import Runnable
-from langchain_openai import ChatOpenAI
 
 from . import MainPartsExtractor
 from .MainPartsExtractor import _DefaultExtractor
@@ -29,6 +28,7 @@ def create_related_work(
     if main_parts_extractor is None:
         main_parts_extractor = _DefaultExtractor()
     if llm is None:
+        from langchain_openai import ChatOpenAI
         llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
         llm.max_tokens = 16385
     summaries_with_text = _summarize_documents(
