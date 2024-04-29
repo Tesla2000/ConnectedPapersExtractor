@@ -1,10 +1,10 @@
 from operator import attrgetter
 from typing import Union, Optional
 
-from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import BaseMessage
 from langchain_core.runnables import Runnable
+from langchain_text_splitters import TextSplitter
 
 from . import MainPartsExtractor
 from .MainPartsExtractor import _DefaultExtractor
@@ -19,7 +19,7 @@ def create_related_work(
         Runnable[LanguageModelInput, str],
         Optional[Runnable[LanguageModelInput, BaseMessage]],
     ] = None,
-    embeddings: Optional[Embeddings] = None,
+    text_splitter: Optional[TextSplitter] = None,
     main_parts_extractor: Optional[MainPartsExtractor] = None,
     refine: bool = True,
 ) -> str:
@@ -30,9 +30,8 @@ def create_related_work(
     if llm is None:
         from langchain_openai import ChatOpenAI
         llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-        llm.max_tokens = 16385
     summaries_with_text = _summarize_documents(
-        summaries, main_parts_extractor, llm, embeddings
+        summaries, main_parts_extractor, llm, text_splitter
     )
     combined_summaries = "\n\n".join(
         map(": ".join, map(attrgetter("title", "text_summary"), summaries_with_text))

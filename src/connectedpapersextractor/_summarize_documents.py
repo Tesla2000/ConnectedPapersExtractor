@@ -3,8 +3,9 @@ import warnings
 from dataclasses import asdict
 from typing import Optional
 
-from langchain_core.embeddings import Embeddings
+
 from langchain_core.language_models import BaseLanguageModel
+from langchain_text_splitters import TextSplitter
 
 from . import Config
 from .MainPartsExtractor import MainPartsExtractor
@@ -18,13 +19,13 @@ def _summarize_documents(
     summaries: PdfSummaries,
     main_parts_extractor: MainPartsExtractor,
     llm: Optional[BaseLanguageModel] = None,
-    embeddings: Optional[Embeddings] = None,
+    text_splitter: Optional[TextSplitter] = None,
 ) -> PdfSummaries:
     metadata_path = summaries[0].file_path.parent.joinpath(Config.metadate_file_name)
     for summary in summaries:
         if summary.text_summary is not None:
             continue
-        _add_docs(summary, embeddings)
+        _add_docs(summary, text_splitter)
         docs = main_parts_extractor.extract(summary)
         try:
             text_summary = _stuff_documents(llm, docs)
