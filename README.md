@@ -11,22 +11,21 @@ Installation:
 Code example:
 `
 
-    import os
     from pathlib import Path
     
-    from src.ConnectedPapersExtractor import get_summaries, ArticleFilter, PdfSummaries
-    from src.ConnectedPapersExtractor.create_related_work import create_related_work
+    from src.connectedpapersextractor import get_summaries, ArticleFilter, PdfSummaries
+    from src.connectedpapersextractor.create_related_work import create_related_work
     
     if __name__ == "__main__":
         class Filter(ArticleFilter):
             def filter(self, summaries: PdfSummaries) -> PdfSummaries:
-                return list(summary for summary in summaries if summary.n_words < 10000)
+                return list(summary for summary in summaries if summary.n_words < 9500)
     
     
-        connected_papers_url = "https://www.connectedpapers.com/main/d1bb97ac84e81b10f3a60d7c634c6c0c26437072/Can-LLMs-be-Good-Financial-Advisors%3F%3A-An-Initial-Study-in-Personal-Decision-Making-for-Optimized-Outcomes/graph"
+        connected_papers_url = "https://www.connectedpapers.com/main/9dac589a9ee616acc17b75e4cad546f94ce6777d/Evolutionary%20Based-Neural-Architecture-Search-for-an-Efficient-CAES-and-PV-Farm-Joint-Operation-Strategy-Using-Deep-Reinforcement-Learning/graph"
         summaries = get_summaries(
             connected_papers_url,
-            pdf_output=Path("pdf_files"),
+            pdf_output=Path("evolutionary_rl"),
             article_filter=Filter(),
         )
     
