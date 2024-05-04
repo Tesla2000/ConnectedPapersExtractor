@@ -2,15 +2,16 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from PyPDF2 import PdfReader, PageObject
 from PyPDF2.errors import PdfReadError
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_core.documents import Document
-from PyPDF2 import PdfReader, PageObject
 
 
 @dataclass
 class PdfSummary:
     file_path: Path
+    download_link: str = None
     title: str = None
     year: int = None
     citations: int = None
@@ -66,6 +67,11 @@ class PdfSummary:
             finally:
                 io.close()
         return self._n_words
+
+    def __eq__(self, other):
+        if not isinstance(other, PdfSummary):
+            return False
+        return self.file_path == other.file_path
 
 
 PdfSummaries = list[PdfSummary]

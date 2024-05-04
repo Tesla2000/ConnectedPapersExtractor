@@ -14,3 +14,4 @@
 /.pre-commit-config.yaml
 /sandbox.py
 /pdf_files/
+/.env

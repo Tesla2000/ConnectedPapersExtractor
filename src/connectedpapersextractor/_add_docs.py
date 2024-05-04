@@ -3,7 +3,7 @@ from typing import Optional
 
 from langchain_text_splitters import TextSplitter
 
-from . import PdfSummary
+from src.connectedpapersextractor import PdfSummary
 
 
 def _add_docs(

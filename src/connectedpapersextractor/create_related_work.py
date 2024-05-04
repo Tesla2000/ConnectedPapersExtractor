@@ -22,6 +22,7 @@ def create_related_work(
     text_splitter: Optional[TextSplitter] = None,
     main_parts_extractor: Optional[MainPartsExtractor] = None,
     refine: bool = True,
+    custom_stuff_prompt_template: Optional[str] = None,
 ) -> str:
     if not summaries:
         raise ValueError("Summaries must be provided")
@@ -31,7 +32,7 @@ def create_related_work(
         from langchain_openai import ChatOpenAI
         llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
     summaries_with_text = _summarize_documents(
-        summaries, main_parts_extractor, llm, text_splitter
+        summaries, main_parts_extractor, llm, text_splitter, custom_stuff_prompt_template
     )
     combined_summaries = "\n\n".join(
         map(": ".join, map(attrgetter("title", "text_summary"), summaries_with_text))

@@ -7,8 +7,8 @@ from langchain.vectorstores import faiss
 from langchain_core.documents import Document
 from openai.types import Embedding
 
-from . import PdfSummary, Config
-from .MainPartsExtractor import MainPartsExtractor
+from src.connectedpapersextractor import PdfSummary, Config
+from src.connectedpapersextractor.MainPartsExtractor import MainPartsExtractor
 
 
 class _AIExtractor(MainPartsExtractor):

@@ -6,15 +6,14 @@ from typing import Optional
 from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 from langchain_core.language_models import BaseLanguageModel
 from langchain_text_splitters import TextSplitter
-from tqdm import tqdm
 
-from . import Config
-from .MainPartsExtractor import MainPartsExtractor
-from .PdfSummary import PdfSummaries
+from src.connectedpapersextractor import Config
+from src.connectedpapersextractor.MainPartsExtractor import MainPartsExtractor
+from src.connectedpapersextractor.PdfSummary import PdfSummaries
 from ._add_docs import _add_docs
 from ._huggingface_reduce import _huggingface_reduce
-from ._refine_documents import _refine_documents, refine_prompt_template
-from ._stuff_documents import _stuff_documents, stuff_prompt_template
+from ._refine_documents import _refine_documents
+from ._stuff_documents import _stuff_documents
 
 
 def _summarize_documents(
@@ -22,6 +21,7 @@ def _summarize_documents(
     main_parts_extractor: MainPartsExtractor,
     llm: Optional[BaseLanguageModel] = None,
     text_splitter: Optional[TextSplitter] = None,
+    custom_stuff_prompt_template: Optional[str] = None,
 ) -> PdfSummaries:
     metadata_path = summaries[0].file_path.parent.joinpath(Config.metadate_file_name)
     for summary in summaries:
@@ -33,10 +33,10 @@ def _summarize_documents(
             text_summary = _huggingface_reduce(llm, docs)
         else:
             try:
-                text_summary = _stuff_documents(llm, docs)
+                text_summary = _stuff_documents(llm, docs, custom_stuff_prompt_template)
             except Exception as e:
                 warnings.warn(str(e))
-                text_summary = _refine_documents(llm, docs)
+                text_summary = _refine_documents(llm, docs, custom_stuff_prompt_template)
         summary.text_summary = text_summary
         summary_as_dict = asdict(summary)
         summary_as_dict.pop("docs")

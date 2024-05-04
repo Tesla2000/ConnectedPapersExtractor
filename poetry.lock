@@ -59,6 +59,18 @@ test = ["anyio", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypothesis
 trio = ["trio (>=0.23)"]
 
 [[package]]
+name = "arxiv"
+version = "2.1.0"
+description = "Python wrapper for the arXiv API: https://arxiv.org/help/api/"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+feedparser = "6.0.10"
+requests = "2.31.0"
+
+[[package]]
 name = "async-timeout"
 version = "4.0.3"
 description = "Timeout context manager for asyncio programs"
@@ -196,6 +208,17 @@ python-versions = ">=3.7"
 
 [package.extras]
 test = ["pytest (>=6)"]
+
+[[package]]
+name = "feedparser"
+version = "6.0.10"
+description = "Universal feed parser, handles RSS 0.9x, RSS 1.0, RSS 2.0, CDF, Atom 0.3, and Atom 1.0 feeds"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+sgmllib3k = "*"
 
 [[package]]
 name = "frozenlist"
@@ -354,7 +377,7 @@ cli = ["typer (>=0.9.0,<0.10.0)"]
 
 [[package]]
 name = "langchain-core"
-version = "0.1.46"
+version = "0.1.47"
 description = "Building applications with LLMs through composability"
 category = "main"
 optional = false
@@ -601,6 +624,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.1"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.1"
 description = "YAML parser and emitter for Python"
@@ -660,6 +694,14 @@ trio = ">=0.17,<1.0"
 trio-websocket = ">=0.9,<1.0"
 typing_extensions = ">=4.9.0"
 urllib3 = {version = ">=1.26,<3", extras = ["socks"]}
+
+[[package]]
+name = "sgmllib3k"
+version = "1.0.0"
+description = "Py3k port of sgmllib."
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "six"
@@ -879,13 +921,14 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8.1"
-content-hash = "fdc4288d59e175e3fb9313a572cd4af9237ed8c8bcc02259fad1cf9050b1257f"
+content-hash = "3d6bee29f097106754fd473e51aeb962b1a9252a89b55bd5c4f9cbc1a499bccb"
 
 [metadata.files]
 aiohttp = []
 aiosignal = []
 annotated-types = []
 anyio = []
+arxiv = []
 async-timeout = []
 attrs = []
 certifi = []
@@ -899,6 +942,7 @@ distro = []
 download = []
 enhancedwebdriver = []
 exceptiongroup = []
+feedparser = []
 frozenlist = []
 greenlet = []
 h11 = []
@@ -929,11 +973,13 @@ pydantic-core = []
 pypdf = []
 pypdf2 = []
 pysocks = []
+python-dotenv = []
 pyyaml = []
 regex = []
 requests = []
 retry = []
 selenium = []
+sgmllib3k = []
 six = []
 sniffio = []
 sortedcontainers = []

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from langchain.chains.summarize import load_summarize_chain
 from langchain_core.documents import Document
 from langchain_core.language_models import BaseLanguageModel
@@ -13,9 +15,11 @@ refine_prompt_template = """
               """
 
 
-def _refine_documents(llm: BaseLanguageModel, docs: list[Document]) -> str:
+def _refine_documents(llm: BaseLanguageModel, docs: list[Document], custom_stuff_prompt_template: Optional[str] = None) -> str:
+    if custom_stuff_prompt_template is None:
+        custom_stuff_prompt_template = stuff_prompt_template
     question_prompt = PromptTemplate(
-        template=stuff_prompt_template, input_variables=["text"]
+        template=custom_stuff_prompt_template, input_variables=["text"]
     )
 
     refine_prompt = PromptTemplate(

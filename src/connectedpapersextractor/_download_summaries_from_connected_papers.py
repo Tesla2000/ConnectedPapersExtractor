@@ -1,27 +1,23 @@
-import json
-from dataclasses import asdict
 from itertools import count
 from pathlib import Path
 from typing import Union
 
-from download import download
 from enhanced_webdriver import EnhancedWebdriver
 from undetected_chromedriver import ChromeOptions
 
-from . import PdfSummaries, PdfSummary
-from .Config import Config
+from src.connectedpapersextractor import PdfSummaries, PdfSummary
+from src.connectedpapersextractor._download_summaries import _download_summaries
 
 
-def _get_pdf_summaries(
+def _download_summaries_from_connected_papers(
     connected_papers_link: str,
-    dir_path: Union[str, Path] = Path("./"),
+    dir_path: Union[str, Path] = Path("/"),
 ) -> PdfSummaries:
     options = ChromeOptions()
     options.headless = True
     driver = EnhancedWebdriver.create(undetected=True, options=options)
     driver.get(connected_papers_link)
     summaries = list()
-    downloads = list()
     for index in count(1):
         if not driver.click(
             f'//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[{index}]'
@@ -44,6 +40,7 @@ def _get_pdf_summaries(
         file_path = dir_path.joinpath(link.rpartition("/")[-1]).with_suffix(".pdf")
         summary = PdfSummary(
             file_path=file_path,
+            download_link=link,
             year=int(
                 driver.get_text_of_element(
                     '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'
@@ -57,28 +54,6 @@ def _get_pdf_summaries(
             title=title,
         )
         summaries.append(summary)
-        downloads.append(
-            (
-                link,
-                str(file_path),
-            )
-        )
     driver.quit()
-    failed_download = set()
-    for link, file_path in downloads:
-        try:
-            download(link, file_path)
-        except RuntimeError:
-            failed_download.add(file_path)
-    summaries = list(
-        summary for summary in summaries if summary.is_valid())
-    dir_path.joinpath(Config.metadate_file_name).write_text(
-        json.dumps(
-            dict(
-                (str(summary_dict.pop("file_path")), summary_dict)
-                for summary_dict in map(asdict, summaries)
-            ),
-            indent=2,
-        )
-    )
+    _download_summaries(summaries, dir_path)
     return summaries
