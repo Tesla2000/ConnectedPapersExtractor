@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from injector import inject
 
-from src.connectedpapersextractor.article import Articles
+from ..article import Articles
 
 
 @inject

@@ -5,7 +5,7 @@ from typing import Optional
 from .article import Articles
 from .services.convert_service import CovertService
 from .services.convert_service import default_convert_service
-from src.connectedpapersextractor.utils.summarize_documents import (
+from .utils.summarize_documents import (
     add_summaries,
 )
 

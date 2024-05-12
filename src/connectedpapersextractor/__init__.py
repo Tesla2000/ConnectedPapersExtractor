@@ -15,6 +15,6 @@ from .get_summaries_from_connected_papers import (
     get_summaries_from_connected_papers,
 )
 from .Config import Config
-from src.connectedpapersextractor.services.main_parts_extractor import (
+from .services.main_parts_extractor import (
     MainPartsExtractorService,
 )

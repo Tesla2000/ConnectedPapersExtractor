@@ -8,16 +8,21 @@ from pathlib import Path
 
 from download import download
 
-from src.connectedpapersextractor import Articles
-from src.connectedpapersextractor.Config import Config
+from .. import Articles
+from ..Config import Config
 
 
-def download_summaries(summaries: Articles, out_dir: PathLike[str]) -> Articles:
+def download_summaries(
+    summaries: Articles,
+    out_dir: PathLike[str]
+) -> Articles:
     for summary in summaries:
         link, file_path = summary.download_link, str(summary.file_path)
         with suppress(RuntimeError):
             download(link, file_path)
-    summaries = list(set(summary for summary in summaries if summary.is_valid()))
+    summaries = list(set(
+        summary for summary in summaries if summary.is_valid()
+    ))
     Path(out_dir).joinpath(Config.metadate_file_name).write_text(
         json.dumps(
             dict(

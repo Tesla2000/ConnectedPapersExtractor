@@ -30,7 +30,7 @@ class Article:
         if not self.file_path.exists():
             return False
         try:
-            io = self.file_path.read_bytes().decode()
+            io = self.file_path
             PdfReader(io)
         except PdfReadError:
             os.remove(str(self.file_path.absolute()))
@@ -39,18 +39,19 @@ class Article:
 
     @property
     def n_pages(self) -> int:
+        self._count_pages_and_words()
         if self._n_pages is None:
-            io = self.file_path.open("rb")
-            try:
-                reader = PdfReader(io)
-                self._n_pages = len(reader.pages)
-                self._n_words = _count_words(reader)
-            finally:
-                io.close()
+            raise ValueError
         return self._n_pages
 
     @property
     def n_words(self) -> int:
+        self._count_pages_and_words()
+        if self._n_words is None:
+            raise ValueError
+        return self._n_words
+
+    def _count_pages_and_words(self):
         io = self.file_path.open("rb")
         if self._n_words is None:
             try:
@@ -59,16 +60,20 @@ class Article:
                 self._n_words = _count_words(reader)
             finally:
                 io.close()
-        return self._n_words
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Article):
             return False
         return self.file_path == other.file_path
 
+    def __hash__(self) -> int:
+        return self.file_path.__hash__()
+
 
 Articles = list[Article]
 
 
 def _count_words(reader: PdfReader) -> int:
-    return sum(map(len, map(str.split, map(PageObject.extract_text, reader.pages))))
+    return sum(
+        map(len, map(str.split, map(PageObject.extract_text, reader.pages)))
+    )

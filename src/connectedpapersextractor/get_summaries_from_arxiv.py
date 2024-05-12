@@ -10,10 +10,10 @@ import arxiv
 from . import ArticleFilterService
 from . import Articles
 from .Config import Config
-from src.connectedpapersextractor.utils.download_summaries_from_arxiv import (
+from .utils.download_summaries_from_arxiv import (
     download_summaries_from_arxiv,
 )
-from src.connectedpapersextractor.utils.get_existing_summaries import (
+from .utils.get_existing_summaries import (
     check_for_existing_summaries,
 )
 
@@ -32,7 +32,9 @@ def get_summaries_from_arxiv(
             temp_pdf,
         )
     else:
-        metadata = json.loads(temp_pdf.joinpath(Config.metadate_file_name).read_text())
+        metadata = json.loads(
+            temp_pdf.joinpath(Config.metadate_file_name).read_text()
+        )
         for summary in summaries:
             for key, value in metadata[str(summary.file_path)].items():
                 setattr(summary, key, value)

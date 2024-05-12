@@ -8,10 +8,10 @@ from typing import Optional
 from . import ArticleFilterService
 from . import Articles
 from .Config import Config
-from src.connectedpapersextractor.utils.download_summaries_from_connected_papers import (
+from .utils.download_summaries_from_connected_papers import (
     download_summaries_from_connected_papers,
 )
-from src.connectedpapersextractor.utils.get_existing_summaries import (
+from .utils.get_existing_summaries import (
     check_for_existing_summaries,
 )
 
@@ -30,7 +30,9 @@ def get_summaries_from_connected_papers(
             temp_pdf,
         )
     else:
-        metadata = json.loads(temp_pdf.joinpath(Config.metadate_file_name).read_text())
+        metadata = json.loads(
+            temp_pdf.joinpath(Config.metadate_file_name).read_text()
+        )
         for summary in summaries:
             for key, value in metadata[str(summary.file_path)].items():
                 setattr(summary, key, value)

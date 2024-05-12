@@ -7,19 +7,13 @@ from pathlib import Path
 from injector import inject
 from injector import Injector
 
-from src.connectedpapersextractor import Article
-from src.connectedpapersextractor import ArticleFilterService
-from src.connectedpapersextractor import MainPartsExtractorService
-from src.connectedpapersextractor.services.sumaries_combine import (
+from .. import Article
+from .. import ArticleFilterService
+from .. import MainPartsExtractorService
+from ..services.sumaries_combine import (
     SummariesCombineService, )
-from src.connectedpapersextractor.services.summarizer import SummarizerService
-from src.connectedpapersextractor.services.text_splitter import TextSplitterService  # noqa E501
-
-# text_splitter_service = injector.get(DefaultTextSplitterService)
-# main_parts_extractor = injector.get(DefaultMainPartsExtractorService)
-# summarizer_service = injector.get(DefaultSummarizerService)
-# article_filter_service = injector.get(DefaultArticleFilterService)
-# summaries_combine_service = injector.get(DefaultSummariesCombineService)
+from ..services.summarizer import SummarizerService
+from ..services.text_splitter import TextSplitterService  # noqa E501
 
 
 class CovertService:

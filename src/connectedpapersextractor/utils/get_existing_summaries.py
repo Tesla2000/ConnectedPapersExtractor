@@ -6,10 +6,10 @@ from typing import Optional
 
 from injector import Injector
 
-from src.connectedpapersextractor import Article
-from src.connectedpapersextractor import ArticleFilterService
-from src.connectedpapersextractor import Articles
-from src.connectedpapersextractor.Config import Config
+from .. import Article
+from .. import ArticleFilterService
+from .. import Articles
+from ..Config import Config
 
 
 def check_for_existing_summaries(
@@ -19,7 +19,8 @@ def check_for_existing_summaries(
     if article_filter is None:
         article_filter = Injector().get(ArticleFilterService)
     temp_pdf = Path(
-        pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path))
+        pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path)
+    )
     temp_pdf.mkdir(exist_ok=True, parents=True)
     summaries = list(
         filter(

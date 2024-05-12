@@ -3,8 +3,8 @@ from __future__ import annotations
 from injector import inject
 from langchain_community.document_loaders import PyPDFLoader
 
-from src.connectedpapersextractor import Article
-from src.connectedpapersextractor.article import Documents
+from .. import Article
+from ..article import Documents
 
 
 @inject

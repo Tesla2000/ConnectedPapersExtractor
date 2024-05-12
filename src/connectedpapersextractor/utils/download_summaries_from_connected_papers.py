@@ -7,9 +7,9 @@ from typing import Union
 from enhanced_webdriver import EnhancedWebdriver
 from undetected_chromedriver import ChromeOptions
 
-from src.connectedpapersextractor import Article
-from src.connectedpapersextractor import Articles
-from src.connectedpapersextractor.utils.download_summaries import download_summaries
+from .. import Article
+from .. import Articles
+from ..utils.download_summaries import download_summaries
 
 
 def _collect_article(driver: EnhancedWebdriver, dir_path: Path):
@@ -19,7 +19,8 @@ def _collect_article(driver: EnhancedWebdriver, dir_path: Path):
     )
     if (
         driver.get_text_of_element(
-            '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[5]/a[1]/span'
+            '//*[@id="desktop-app"]/div[2]/div[4]'
+            '/div[3]/div/div[2]/div[5]/a[1]/span'
         ) != "PDF"
     ):
         return
@@ -32,12 +33,14 @@ def _collect_article(driver: EnhancedWebdriver, dir_path: Path):
         download_link=link,
         year=int(
             driver.get_text_of_element(
-                '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]'
+                '//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]'
+                '/div/div[2]/div[2]/div[2]/div[2]'
             )
         ),
         citations=int(
             driver.get_text_of_element(
-                '//*[@id="desktop-app"]/div[2]/div[4]/div[3]/div/div[2]/div[4]/div[1]'
+                '//*[@id="desktop-app"]/div[2]/div[4]/'
+                'div[3]/div/div[2]/div[4]/div[1]'
             ).split()[0]
         ),
         title=title,
@@ -48,7 +51,8 @@ def _collect_articles(driver: EnhancedWebdriver, dir_path: Path) -> Articles:
     articles = list()
     for index in count(1):
         if not driver.click(
-            f'//*[@id="desktop-app"]/div[2]/div[4]/div[1]/div/div[2]/div/div[2]/div[{index}]'
+            '//*[@id="desktop-app"]/div[2]/div[4]/'
+            f'div[1]/div/div[2]/div/div[2]/div[{index}]'
         ):
             break
         articles.append(_collect_article(driver, dir_path))

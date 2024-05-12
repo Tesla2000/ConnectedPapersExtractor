@@ -4,7 +4,7 @@ from operator import attrgetter
 
 from injector import inject
 
-from src.connectedpapersextractor.article import Articles
+from ..article import Articles
 
 
 @inject

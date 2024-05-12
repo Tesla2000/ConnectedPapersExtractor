@@ -5,9 +5,9 @@ from typing import Union
 
 import arxiv
 
-from src.connectedpapersextractor import Article
-from src.connectedpapersextractor import Articles
-from src.connectedpapersextractor.utils.download_summaries import download_summaries
+from .. import Article
+from .. import Articles
+from ..utils.download_summaries import download_summaries
 
 
 def download_summaries_from_arxiv(
