@@ -1,42 +1,25 @@
-from operator import attrgetter
-from typing import Union, Optional
+from __future__ import annotations
 
-from langchain_core.language_models import LanguageModelInput
-from langchain_core.messages import BaseMessage
-from langchain_core.runnables import Runnable
-from langchain_text_splitters import TextSplitter
+from typing import Optional
 
-from . import MainPartsExtractor
-from .MainPartsExtractor import _DefaultExtractor
-from .PdfSummary import PdfSummaries
-from ._combine_summaries import _combine_summaries
-from ._summarize_documents import _summarize_documents
+from .article import Articles
+from .services.convert_service import CovertService
+from .services.convert_service import default_convert_service
+from .utils.summarize_documents import (
+    add_summaries,
+)
+
+Default = None
 
 
 def create_related_work(
-    summaries: PdfSummaries,
-    llm: Union[
-        Runnable[LanguageModelInput, str],
-        Optional[Runnable[LanguageModelInput, BaseMessage]],
-    ] = None,
-    text_splitter: Optional[TextSplitter] = None,
-    main_parts_extractor: Optional[MainPartsExtractor] = None,
-    refine: bool = True,
-    custom_stuff_prompt_template: Optional[str] = None,
+    summaries: Articles,
+    convert_service: Optional[CovertService] = Default,
 ) -> str:
     if not summaries:
         raise ValueError("Summaries must be provided")
-    if main_parts_extractor is None:
-        main_parts_extractor = _DefaultExtractor()
-    if llm is None:
-        from langchain_openai import ChatOpenAI
-        llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-    summaries_with_text = _summarize_documents(
-        summaries, main_parts_extractor, llm, text_splitter, custom_stuff_prompt_template
-    )
-    combined_summaries = "\n\n".join(
-        map(": ".join, map(attrgetter("title", "text_summary"), summaries_with_text))
-    )
-    if refine and len(summaries) != 1:
-        return _combine_summaries(combined_summaries, llm)
-    return combined_summaries
+    if convert_service is None:
+        convert_service = default_convert_service
+    articles_with_summaries = add_summaries(summaries, convert_service)
+    summaries_combine_service = convert_service.summaries_combine_service
+    return summaries_combine_service.combine(articles_with_summaries)

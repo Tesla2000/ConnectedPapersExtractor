@@ -1,14 +1,20 @@
+from __future__ import annotations
+
 __all__ = [
-    "ArticleFilter",
-    "PdfSummary",
-    "PdfSummaries",
+    "ArticleFilterService",
+    "Article",
+    "Articles",
     "get_summaries_from_connected_papers",
     "Config",
-    "MainPartsExtractor",
+    "MainPartsExtractorService",
 ]
 
-from .ArticleFilter import ArticleFilter
-from .PdfSummary import PdfSummary, PdfSummaries
-from .get_summaries_from_connected_papers import get_summaries_from_connected_papers
+from .services.article_filter import ArticleFilterService  # noqa E501
+from .article import Article, Articles
+from .get_summaries_from_connected_papers import (
+    get_summaries_from_connected_papers,
+)
 from .Config import Config
-from .MainPartsExtractor import MainPartsExtractor
+from .services.main_parts_extractor import (
+    MainPartsExtractorService,
+)
