@@ -1,23 +1,29 @@
 from __future__ import annotations
 
 import json
-from abc import ABC
 from dataclasses import asdict
 from pathlib import Path
 
 from injector import inject
+from injector import Injector
 
 from src.connectedpapersextractor import Article
 from src.connectedpapersextractor import ArticleFilterService
 from src.connectedpapersextractor import MainPartsExtractorService
 from src.connectedpapersextractor.services.sumaries_combine import (
-    SummariesCombineService,
-)
+    SummariesCombineService, )
 from src.connectedpapersextractor.services.summarizer import SummarizerService
-from src.connectedpapersextractor.services.text_splitter import TextSplitterService
+from src.connectedpapersextractor.services.text_splitter import TextSplitterService  # noqa E501
+
+injector = Injector()
+# text_splitter_service = injector.get(DefaultTextSplitterService)
+# main_parts_extractor = injector.get(DefaultMainPartsExtractorService)
+# summarizer_service = injector.get(DefaultSummarizerService)
+# article_filter_service = injector.get(DefaultArticleFilterService)
+# summaries_combine_service = injector.get(DefaultSummariesCombineService)
 
 
-class CovertService(ABC):
+class CovertService:
     @inject
     def __init__(
         self,
@@ -46,4 +52,5 @@ class CovertService(ABC):
         return article.text_summary
 
 
+injector.get(CovertService)
 default_convert_service = CovertService()
