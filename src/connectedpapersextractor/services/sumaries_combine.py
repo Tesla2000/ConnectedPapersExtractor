@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
-from abc import abstractmethod
 from operator import attrgetter
 
 from injector import inject
@@ -10,16 +8,10 @@ from src.connectedpapersextractor.article import Articles
 
 
 @inject
-class SummariesCombineService(ABC):
+class SummariesCombineService:
     def __init__(self):
         pass
 
-    @abstractmethod
-    def combine(self, articles_with_summaries: Articles) -> str:
-        pass
-
-
-class DefaultSummariesCombineService(SummariesCombineService):
     def combine(self, articles_with_summaries: Articles) -> str:
         return "\n\n".join(
             map(": ".join,
@@ -29,4 +21,4 @@ class DefaultSummariesCombineService(SummariesCombineService):
             )
 
 
-default_summaries_combine = DefaultSummariesCombineService()
+default_summaries_combine = SummariesCombineService()

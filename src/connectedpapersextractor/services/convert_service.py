@@ -15,7 +15,6 @@ from src.connectedpapersextractor.services.sumaries_combine import (
 from src.connectedpapersextractor.services.summarizer import SummarizerService
 from src.connectedpapersextractor.services.text_splitter import TextSplitterService  # noqa E501
 
-injector = Injector()
 # text_splitter_service = injector.get(DefaultTextSplitterService)
 # main_parts_extractor = injector.get(DefaultMainPartsExtractorService)
 # summarizer_service = injector.get(DefaultSummarizerService)
@@ -52,5 +51,4 @@ class CovertService:
         return article.text_summary
 
 
-injector.get(CovertService)
-default_convert_service = CovertService()
+default_convert_service = Injector().get(CovertService)

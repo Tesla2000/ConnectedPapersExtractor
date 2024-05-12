@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
-from abc import abstractmethod
-
 import numpy as np
 import openai
 from injector import inject
@@ -11,16 +8,10 @@ from src.connectedpapersextractor.article import Documents
 
 
 @inject
-class MainPartsExtractorService(ABC):
+class MainPartsExtractorService:
     def __init__(self):
         pass
 
-    @abstractmethod
-    def extract(self, docs: Documents) -> Documents:
-        pass
-
-
-class DefaultMainPartsExtractorService(MainPartsExtractorService):
     def extract(self, docs: Documents) -> Documents:
         return docs
     # array = _get_embeddings(docs)
@@ -35,9 +26,6 @@ class DefaultMainPartsExtractorService(MainPartsExtractorService):
     # sorted_array = np.sort(I, axis=0)
     # sorted_array = sorted_array.flatten()
     # return [summary.docs[i] for i in sorted_array]
-
-
-default_extractor_service = DefaultMainPartsExtractorService()
 
 
 def _get_embeddings(

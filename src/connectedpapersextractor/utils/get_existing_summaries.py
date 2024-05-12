@@ -4,11 +4,12 @@ from os import PathLike
 from pathlib import Path
 from typing import Optional
 
+from injector import Injector
+
 from src.connectedpapersextractor import Article
 from src.connectedpapersextractor import ArticleFilterService
 from src.connectedpapersextractor import Articles
 from src.connectedpapersextractor.Config import Config
-from src.connectedpapersextractor.services.article_filter import default_article_filter
 
 
 def check_for_existing_summaries(
@@ -16,8 +17,9 @@ def check_for_existing_summaries(
     article_filter: Optional[ArticleFilterService] = None,
 ) -> tuple[ArticleFilterService, Path, Articles]:
     if article_filter is None:
-        article_filter = default_article_filter
-    temp_pdf = Path(pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path))
+        article_filter = Injector().get(ArticleFilterService)
+    temp_pdf = Path(
+        pdf_output or Path(__file__).parent.joinpath(Config.temp_pdf_path))
     temp_pdf.mkdir(exist_ok=True, parents=True)
     summaries = list(
         filter(
