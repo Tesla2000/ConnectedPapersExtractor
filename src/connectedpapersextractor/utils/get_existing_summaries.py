@@ -3,10 +3,10 @@ from pathlib import Path
 from typing import Optional
 
 from src.connectedpapersextractor import ArticleFilter, PdfSummaries, Config, PdfSummary
-from src.connectedpapersextractor._BasicFilter import _BasicFilter
+from src.connectedpapersextractor.utils.BasicFilter import _BasicFilter
 
 
-def _check_for_existing_summaries(
+def check_for_existing_summaries(
     pdf_output: Optional[PathLike[str]] = None,
     article_filter: Optional[ArticleFilter] = None, ) -> tuple[ArticleFilter, Path, PdfSummaries]:
     if article_filter is None:

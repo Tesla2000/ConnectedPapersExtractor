@@ -1,4 +1,4 @@
-from . import ArticleFilter, PdfSummaries
+from src.connectedpapersextractor import ArticleFilter, PdfSummaries
 
 
 class _BasicFilter(ArticleFilter):

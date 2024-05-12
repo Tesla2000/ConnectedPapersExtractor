@@ -6,11 +6,11 @@ from pathlib import Path
 from dataclasses import asdict
 from download import download
 
-from . import PdfSummaries
-from .Config import Config
+from src.connectedpapersextractor import PdfSummaries
+from src.connectedpapersextractor.Config import Config
 
 
-def _download_summaries(summaries: PdfSummaries, out_dir: PathLike[str]) -> PdfSummaries:
+def download_summaries(summaries: PdfSummaries, out_dir: PathLike[str]) -> PdfSummaries:
     for summary in summaries:
         link, file_path = summary.download_link, str(summary.file_path)
         with suppress(RuntimeError):

@@ -27,12 +27,12 @@ class _AIExtractor(MainPartsExtractor):
         return [summary.docs[i] for i in sorted_array]
 
 
-def _openai_embed(pages: list[str]) -> list[Embedding]:
+def openai_embed(pages: list[str]) -> list[Embedding]:
     response = openai.embeddings.create(model="text-embedding-3-small", input=pages)
     return response.data
 
 
-def _generate_embeddings(
+def generate_embeddings(
     embeddings_path: Path,
     embeddings_shape_path: Path,
     docs: list[Document],
@@ -49,7 +49,7 @@ def _generate_embeddings(
     return array
 
 
-def _get_embeddings(
+def get_embeddings(
     summary: PdfSummary,
     embeddings_function: Optional[Callable[[list[str]], list[Embedding]]] = None,
     load_embeddings: bool = True,

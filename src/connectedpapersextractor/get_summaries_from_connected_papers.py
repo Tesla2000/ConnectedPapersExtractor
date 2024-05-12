@@ -3,11 +3,11 @@ import shutil
 from os import PathLike
 from typing import Optional
 
-from src.connectedpapersextractor._download_summaries_from_connected_papers import \
-    _download_summaries_from_connected_papers
+from src.connectedpapersextractor.utils.download_summaries_from_connected_papers import \
+    download_summaries_from_connected_papers
 from . import ArticleFilter, PdfSummaries
 from .Config import Config
-from ._get_existing_summaries import _check_for_existing_summaries
+from src.connectedpapersextractor.utils.get_existing_summaries import check_for_existing_summaries
 
 
 def get_summaries_from_connected_papers(
@@ -15,9 +15,9 @@ def get_summaries_from_connected_papers(
     pdf_output: Optional[PathLike[str]] = None,
     article_filter: Optional[ArticleFilter] = None,
 ) -> PdfSummaries:
-    article_filter, temp_pdf, summaries = _check_for_existing_summaries(pdf_output, article_filter)
+    article_filter, temp_pdf, summaries = check_for_existing_summaries(pdf_output, article_filter)
     if not summaries:
-        summaries = _download_summaries_from_connected_papers(
+        summaries = download_summaries_from_connected_papers(
             connected_papers_url,
             temp_pdf,
         )

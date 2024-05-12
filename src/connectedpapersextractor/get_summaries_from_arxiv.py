@@ -6,8 +6,8 @@ import arxiv
 
 from . import ArticleFilter, PdfSummaries
 from .Config import Config
-from ._download_summaries_from_arxiv import _download_summaries_from_arxiv
-from ._get_existing_summaries import _check_for_existing_summaries
+from src.connectedpapersextractor.utils.download_summaries_from_arxiv import download_summaries_from_arxiv
+from src.connectedpapersextractor.utils.get_existing_summaries import check_for_existing_summaries
 
 
 def get_summaries_from_arxiv(
@@ -15,9 +15,9 @@ def get_summaries_from_arxiv(
     pdf_output: Optional[PathLike[str]] = None,
     article_filter: Optional[ArticleFilter] = None,
 ) -> PdfSummaries:
-    article_filter, temp_pdf, summaries = _check_for_existing_summaries(pdf_output, article_filter)
+    article_filter, temp_pdf, summaries = check_for_existing_summaries(pdf_output, article_filter)
     if not summaries:
-        summaries = _download_summaries_from_arxiv(
+        summaries = download_summaries_from_arxiv(
             search,
             temp_pdf,
         )

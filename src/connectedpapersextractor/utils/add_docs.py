@@ -6,7 +6,7 @@ from langchain_text_splitters import TextSplitter
 from src.connectedpapersextractor import PdfSummary
 
 
-def _add_docs(
+def add_docs(
     summary: PdfSummary, text_splitter: Optional[TextSplitter] = None
 ) -> PdfSummary:
     raw_documents = summary.extract_documents()

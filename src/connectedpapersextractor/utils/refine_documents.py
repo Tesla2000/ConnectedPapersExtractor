@@ -5,7 +5,7 @@ from langchain_core.documents import Document
 from langchain_core.language_models import BaseLanguageModel
 from langchain_core.prompts import PromptTemplate
 
-from src.connectedpapersextractor._stuff_documents import stuff_prompt_template
+from src.connectedpapersextractor.utils.stuff_documents import stuff_prompt_template
 
 refine_prompt_template = """
               Write a concise summary of the following summaries from scientific article. 
@@ -15,7 +15,7 @@ refine_prompt_template = """
               """
 
 
-def _refine_documents(llm: BaseLanguageModel, docs: list[Document], custom_stuff_prompt_template: Optional[str] = None) -> str:
+def refine_documents(llm: BaseLanguageModel, docs: list[Document], custom_stuff_prompt_template: Optional[str] = None) -> str:
     if custom_stuff_prompt_template is None:
         custom_stuff_prompt_template = stuff_prompt_template
     question_prompt = PromptTemplate(

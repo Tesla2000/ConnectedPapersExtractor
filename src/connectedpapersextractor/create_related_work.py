@@ -9,8 +9,8 @@ from langchain_text_splitters import TextSplitter
 from . import MainPartsExtractor
 from .MainPartsExtractor import _DefaultExtractor
 from .PdfSummary import PdfSummaries
-from ._combine_summaries import _combine_summaries
-from ._summarize_documents import _summarize_documents
+from src.connectedpapersextractor.utils.combine_summaries import combine_summaries
+from src.connectedpapersextractor.utils.summarize_documents import summarize_documents
 
 
 def create_related_work(
@@ -31,12 +31,12 @@ def create_related_work(
     if llm is None:
         from langchain_openai import ChatOpenAI
         llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
-    summaries_with_text = _summarize_documents(
+    summaries_with_text = summarize_documents(
         summaries, main_parts_extractor, llm, text_splitter, custom_stuff_prompt_template
     )
     combined_summaries = "\n\n".join(
         map(": ".join, map(attrgetter("title", "text_summary"), summaries_with_text))
     )
     if refine and len(summaries) != 1:
-        return _combine_summaries(combined_summaries, llm)
+        return combine_summaries(combined_summaries, llm)
     return combined_summaries

@@ -6,10 +6,10 @@ from enhanced_webdriver import EnhancedWebdriver
 from undetected_chromedriver import ChromeOptions
 
 from src.connectedpapersextractor import PdfSummaries, PdfSummary
-from src.connectedpapersextractor._download_summaries import _download_summaries
+from src.connectedpapersextractor.utils.download_summaries import _download_summaries
 
 
-def _download_summaries_from_connected_papers(
+def download_summaries_from_connected_papers(
     connected_papers_link: str,
     dir_path: Union[str, Path] = Path("/"),
 ) -> PdfSummaries:

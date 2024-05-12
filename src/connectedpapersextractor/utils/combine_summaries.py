@@ -7,7 +7,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import Runnable
 
 
-def _combine_summaries(
+def combine_summaries(
     combined_summaries: str,
     llm: Union[
         Runnable[LanguageModelInput, str],

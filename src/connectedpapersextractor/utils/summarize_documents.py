@@ -10,13 +10,13 @@ from langchain_text_splitters import TextSplitter
 from src.connectedpapersextractor import Config
 from src.connectedpapersextractor.MainPartsExtractor import MainPartsExtractor
 from src.connectedpapersextractor.PdfSummary import PdfSummaries
-from ._add_docs import _add_docs
-from ._huggingface_reduce import _huggingface_reduce
-from ._refine_documents import _refine_documents
-from ._stuff_documents import _stuff_documents
+from .add_docs import _add_docs
+from .huggingface_reduce import _huggingface_reduce
+from .refine_documents import _refine_documents
+from .stuff_documents import _stuff_documents
 
 
-def _summarize_documents(
+def summarize_documents(
     summaries: PdfSummaries,
     main_parts_extractor: MainPartsExtractor,
     llm: Optional[BaseLanguageModel] = None,

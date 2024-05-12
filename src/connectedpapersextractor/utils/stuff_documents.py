@@ -13,7 +13,7 @@ stuff_prompt_template = """
     """
 
 
-def _stuff_documents(llm: BaseLanguageModel, docs: list[Document], custom_stuff_prompt_template: Optional[str] = None) -> str:
+def stuff_documents(llm: BaseLanguageModel, docs: list[Document], custom_stuff_prompt_template: Optional[str] = None) -> str:
     if custom_stuff_prompt_template is None:
         custom_stuff_prompt_template = stuff_prompt_template
     prompt = ChatPromptTemplate.from_template(custom_stuff_prompt_template)

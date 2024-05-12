@@ -3,7 +3,7 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from tqdm import tqdm
 
-from src.connectedpapersextractor._stuff_documents import stuff_prompt_template
+from src.connectedpapersextractor.utils.stuff_documents import stuff_prompt_template
 
 reduce_prompt_template = """
     Write a 5-6 sentence long summary of the following:
@@ -12,7 +12,7 @@ reduce_prompt_template = """
               """
 
 
-def _huggingface_reduce(llm: HuggingFacePipeline, docs: list[Document]) -> str:
+def huggingface_reduce(llm: HuggingFacePipeline, docs: list[Document]) -> str:
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000 - llm.get_num_tokens(stuff_prompt_template.format(text="")),
         chunk_overlap=200,

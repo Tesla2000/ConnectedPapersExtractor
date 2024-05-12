@@ -4,10 +4,10 @@ from typing import Union
 import arxiv
 
 from src.connectedpapersextractor import PdfSummaries, PdfSummary
-from src.connectedpapersextractor._download_summaries import _download_summaries
+from src.connectedpapersextractor.utils.download_summaries import _download_summaries
 
 
-def _download_summaries_from_arxiv(
+def download_summaries_from_arxiv(
     search: arxiv.Search,
     dir_path: Union[str, Path] = Path("/"),
 ) -> PdfSummaries:
