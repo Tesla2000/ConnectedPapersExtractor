@@ -29,6 +29,6 @@ Code example:
             article_filter=Filter(),
         )
     
-        related_work = create_related_work(summaries, refine=False)
+        related_work = create_related_work(summaries)
         print(related_work)
 `
